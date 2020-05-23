@@ -1,0 +1,16 @@
+<mat-sidenav-container hasBackdrop="false" >
+    <mat-sidenav #leftSidenav opened position="start" mode="push" fixedInViewport="true" [fixedTopGap]="mobileQuery.matches ? 56 : 64">
+        <div>
+            <router-outlet name='leftsidebar'></router-outlet> <!--<span class="loader" *ngIf="loading"></span>-->
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content ngStyle.gt-xs="margin-top: 64px;" ngStyle.lt-sm="margin-top: 56px;">
+        {{showspinner}}
+        <router-outlet name='centercontent'></router-outlet>
+    </mat-sidenav-content>
+    <mat-sidenav #rightSidenav position="end" mode="over" opened  fixedInViewport="true" [fixedTopGap]="mobileQuery.matches ? 56 : 64"  [fxFlex]="mobileQuery.matches ? getMobileFlexOptions(): getFlexOptions()"  (mouseenter)="mobileQuery.matches ? null : togglesidenav(true)" (mouseleave)="mobileQuery.matches ? null: togglesidenav(false)">
+        <!--since the right side nav needs to refresh the arrow based on upper event we need to pass the event to force refresh
+            Also there is no change in the contents hence need not route here-->
+            <app-right-sidenav-content (spinneroff)="switchoffspinner($event)" (flexchange)="togglesidenav($event)" [sidenav]="leftSidenav"  [showarrow]="arrow" [mymedia]= "mobileQuery.matches ? true : false"></app-right-sidenav-content>
+    </mat-sidenav> 
+</mat-sidenav-container>

@@ -1,0 +1,78 @@
+<mat-card  fxLayout.lt-sm="column" fxLayout.gt-xs="row" fxFlex.gt-xs="50vw" fxFlex.lt-sm="87.4vw" fxLayoutAlign="center center" fxLayoutGap.lt-sm="8%"  ngStyle.gt-xs ="margin: 0px; padding: 0px; height: calc(100vh - 64px); overflow-y: hidden;">
+    <div fxFlex.gt-xs="50%" fxLayout="column" ngStyle.lt-sm="padding: 3.5%" ngStyle.gt-xs="padding: 5%" fxLayoutGap.gt-xs="5%" fxLayoutGap.lt-sm="10%">
+        <div fxLayout="row" fxLayoutGap="10%">
+            <div fxFlex="none" fxFlexAlign="center" mat-card-avatar class="avatarclass"></div>
+            <div fxFlex="auto" fxLayout="column" fxLayoutGap="5%" >
+                <mat-card-title >{{mylocaluser?.displayName}}'s Picture</mat-card-title>
+                <mat-card-subtitle  *ngIf="mylocaluser?.phoneNumber !== null">
+                    <button  mat-raised-button color="accent" >Ph:{{mylocaluser?.phoneNumber}}</button>
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="mylocaluser?.phoneNumber === null">
+                    <button  mat-raised-button color="accent" > Add PhoneNo </button>
+                </mat-card-subtitle>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center" >   
+            <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%">
+                <mat-spinner [fxShow]="showspinner ? true : false"></mat-spinner>
+                <img mat-card-xl-image  src= "{{imageStr}}" (load)="dosomething()"
+                    alt="Photo of a User">
+                <mat-chip-list >
+                    <mat-chip fxFlexAlign="center" color="warn" selected>Add Display Name!</mat-chip>
+                </mat-chip-list>
+
+            </div>
+            
+        </div>
+        <div fxLayout="row wrap" fxLayoutAlign="center" fxLayoutGap="5%" > 
+            <div fxFlex="grow" fxLayout="row" >
+                <mat-card-subtitle fxFlex="grow">Imp Dates</mat-card-subtitle>
+            </div>
+            <div fxFlex fxLayout="column" fxLayoutAlign="center center" fxLayoutGap.gt-xs="12%" fxLayoutGap.lt-sm="20%">
+                <button mat-raised-button  color="primary"   >Birthday </button>    
+                <mat-chip-list >
+                    <mat-chip fxFlexAlign="center" color="warn" selected>{{mylocaluser?.BirthDate}}</mat-chip>
+                </mat-chip-list>
+            </div>
+            <div fxFlex fxLayout="column" fxLayoutAlign="center center" fxLayoutGap.gt-xs="12%" fxLayoutGap.lt-sm="20%">
+                <button mat-raised-button color="primary"  >Anniversary</button>
+                <mat-chip-list >
+                    <mat-chip fxFlexAlign="center" color="warn"  selected >{{mylocaluser?.AnniversaryDate}}</mat-chip>
+                </mat-chip-list>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <div fxFlex.gt-xs fxLayout="column" fxLayoutAlign="center center" fxLayoutGap.gt-xs="4%" fxLayoutGap.lt-sm="10%" ngStyle.lt-sm ="padding-bottom: 2%; ">
+        <mat-card-title  >Edit profile
+            <fa-icon  [icon]="['fas', 'arrow-alt-circle-down']" [styles]="{'stroke': 'red', 'color': 'red'}" ></fa-icon>
+        </mat-card-title>
+        <div fxLayout="row" > 
+            <div fxLayout="column" fxFlex.gt-xs="17vw" fxFlex.lt-sm="250px" fxLayoutGap.gt-xs="5%" fxLayoutGap.lt-sm="8%">
+                <button mat-raised-button  color="accent" (click)="openDialogGreeting()"> Audio Greeting</button>
+                <button mat-raised-button  color="accent" (click)="openDialogPictures()"> Profile Image</button>
+                <button mat-raised-button  color="accent" (click)="openDialogDates()"> Imp Dates</button>
+                <button mat-raised-button color="accent" (click)="openDialogGender()"> Gender </button>
+                <button mat-raised-button color="accent" (click)="openDialogRelation()"> Reationship</button>
+                <button mat-raised-button color="accent"(click)="openDialogKids()"> Kids</button>               
+            </div>
+        </div>
+        <div fxLayout="row"   > 
+            <div fxLayout="column" fxLayoutGap.gt-xs="5%" fxLayoutGap.lt-sm="8%">                
+                
+                <mat-card-subtitle  >Profile Status</mat-card-subtitle>
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+                    <mat-button-toggle value="bold">Public</mat-button-toggle>
+                    <mat-button-toggle value="italic">Private</mat-button-toggle>
+                    <mat-button-toggle value="underline">DeActivate</mat-button-toggle>
+                  </mat-button-toggle-group>
+                  <mat-checkbox>Terms & Conditions</mat-checkbox>
+                <button mat-raised-button color="accent"  [disabled]= "disableOk">Ok</button>
+                <button mat-raised-button color="warn" (click)="auth.leftMenuPress.next(true)">Back</button>
+            </div>
+        </div>
+    </div>
+</mat-card>

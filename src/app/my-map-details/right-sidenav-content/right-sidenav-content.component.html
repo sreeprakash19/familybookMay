@@ -1,0 +1,22 @@
+<mat-nav-list role="listitem" ngStyle.gt-xs="overflow-x: hidden;">
+    <mat-list-item (click)="profileclick()">
+        <img [fxShow]="imageStr !== null" fxFlexOffset="-10px" matListAvatar (load) = "swicthoffspinner()"
+            src= "{{imageStr}}">
+                <span [fxShow]="imageStr !== null"  fxFlexOffset="5px"> Profile </span>
+        <mat-spinner [fxShow]="imageStr === null"  strokeWidth="50" diameter="15"></mat-spinner>
+    </mat-list-item>
+
+    <mat-divider></mat-divider>
+
+    <mat-list-item *ngFor="let page of pages" (click)="itemsClick(page)">
+        <mat-icon fxFlexOffset="-5px" matListIcon >{{page?.icon}}</mat-icon>
+        <span fxFlexOffset="7px">{{ page?.name }} </span>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item fxLayoutAlign="center center">
+        <button color="primary" mat-mini-fab (click)="miniFabClick()">
+                <mat-icon *ngIf="showarrow">arrow_right</mat-icon>
+                <mat-icon *ngIf="!showarrow">arrow_left</mat-icon>
+        </button>
+    </mat-list-item>
+</mat-nav-list>

@@ -1,0 +1,68 @@
+<mat-card  fxFlex.gt-xs="50vw" fxFlex.lt-sm="87.4vw" ngStyle.gt-xs="height: calc(100vh -64px)" ngStyle.lt-sm="height: calc(100vh -56px)">
+    <mat-card-title  fxLayoutAlign="center">Family Tree</mat-card-title>
+    <mat-card-content fxLayout="column" fxLayoutGap="30px">
+        <mat-grid-list cols="8" rowHeight="fit" [gutterSize]="7" 
+                        [style.height]="fitListHeight"  >
+                        <mat-grid-tile
+                        *ngFor="let tile of tiles"
+                        [colspan]="tile.cols"
+                        [rowspan]="tile.rows"
+                        [style.background]="tile.color">
+
+                        <img *ngIf="tile.text === 'man'  ||  tile.text === 'women'" mat-card-lg-image src= "./assets/{{tile.text}}.png"
+                                >
+                        <fa-icon [fxShow]="tile.text === 'Title'"  [icon]="['fas', 'angle-double-up']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+                        <fa-icon [fxShow]="tile.text === 'Navi-left'"  [icon]="['fas', 'angle-double-left']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+                        <fa-icon [fxShow]="tile.text === 'Navi-right'"  [icon]="['fas', 'angle-double-right']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+                        </mat-grid-tile>
+        </mat-grid-list>
+
+    <mat-grid-list cols="6" rowHeight="fit" [gutterSize]="7"
+    [style.height]="fitkidsHeight" >
+                    <mat-grid-tile
+                    *ngFor="let tile of tileskids"
+                    [colspan]="tile.cols"
+                    [rowspan]="tile.rows"
+                    [style.background]="tile.color">
+                    <img [fxHide]="tile.text === 'Navi-left' ||tile.text === 'Navi-right'   ||  tile.text === 'Add' || tile.text === 'Remove'"  mat-card-md-image src= "./assets/{{tile.text}}.png">
+                    <fa-icon [fxShow]="tile.text === 'Add'"  [icon]="['fas', 'plus']" size="3x"></fa-icon>
+                    <fa-icon [fxShow]="tile.text === 'Remove'"  [icon]="['fas', 'minus']" size="3x"></fa-icon>
+                    <button  [fxShow]="tile.text === 'Navi-left'" mat-raised-button>Wishes</button>
+                    <button  [fxShow]="tile.text === 'Navi-right'" mat-raised-button>Events</button>
+                </mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list cols="4" rowHeight="fit" [gutterSize]="7"
+    [style.height]="fitOptionsHeight"  >
+                    <mat-grid-tile
+                    *ngFor="let tile of tilesconrols"
+                    [colspan]="tile.cols"
+                    [rowspan]="tile.rows"
+                    [style.background]="tile.color">
+
+                    
+                    <div fxLayout="column" fxLayoutGap="20px">
+                        <fa-icon fxFlexAlign="center" [fxShow]="tile.text === 'Add'"  [icon]="['fas', 'plus']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+
+                            <button mat-raised-button  [fxShow]="tile.text === 'Add'"  > Child</button>
+
+                    </div>
+
+
+                    <div fxLayout="column" fxLayoutGap="20px">
+                        <fa-icon fxFlexAlign="center" [fxShow]="tile.text === 'Remove'"  [icon]="['fas', 'minus']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+                        <button mat-raised-button  [fxShow]="tile.text === 'Remove'"  > Child</button>
+
+                    </div>
+                    <div fxLayout="column" fxLayoutGap="20px">
+                        <fa-icon fxFlexAlign="center" [fxShow]="tile.text === 'Navi-left'"  [icon]="['fas', 'gifts']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x" ></fa-icon>
+                        <button  [fxShow]="tile.text === 'Navi-left'" mat-raised-button >Wishes</button>
+                    </div>
+                    <div fxLayout="column" fxLayoutGap="20px">
+                        <fa-icon fxFlexAlign="center" [fxShow]="tile.text === 'Navi-right'"  [icon]="['fas', 'calendar-alt']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x" ></fa-icon>
+                        <button  [fxShow]="tile.text === 'Navi-right'" mat-raised-button>Events</button>
+                    </div>
+                </mat-grid-tile>
+    </mat-grid-list>
+
+    </mat-card-content>
+  </mat-card>
