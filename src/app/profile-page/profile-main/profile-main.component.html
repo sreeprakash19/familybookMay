@@ -8,7 +8,7 @@
                     <button  mat-raised-button color="accent" >Ph:{{mylocaluser?.phoneNumber}}</button>
                 </mat-card-subtitle>
                 <mat-card-subtitle *ngIf="mylocaluser?.phoneNumber === null">
-                    <button  mat-raised-button color="accent" > Add PhoneNo </button>
+                    <mat-chip fxFlexAlign="center" color="warn" selected>Phone Number!</mat-chip>
                 </mat-card-subtitle>
             </div>
         </div>
@@ -18,7 +18,7 @@
                 <img mat-card-xl-image  src= "{{imageStr}}" (load)="dosomething()"
                     alt="Photo of a User">
                 <mat-chip-list >
-                    <mat-chip fxFlexAlign="center" color="warn" selected>Add Display Name!</mat-chip>
+                    <mat-chip fxFlexAlign="center" color="warn" selected>Display Name!</mat-chip>
                 </mat-chip-list>
 
             </div>
@@ -52,12 +52,13 @@
         </mat-card-title>
         <div fxLayout="row" > 
             <div fxLayout="column" fxFlex.gt-xs="17vw" fxFlex.lt-sm="250px" fxLayoutGap.gt-xs="5%" fxLayoutGap.lt-sm="8%">
+                <button mat-raised-button color="accent"(click)="openDialogContact()"> Contact Details</button>    
                 <button mat-raised-button  color="accent" (click)="openDialogGreeting()"> Audio Greeting</button>
                 <button mat-raised-button  color="accent" (click)="openDialogPictures()"> Profile Image</button>
                 <button mat-raised-button  color="accent" (click)="openDialogDates()"> Imp Dates</button>
                 <button mat-raised-button color="accent" (click)="openDialogGender()"> Gender </button>
                 <button mat-raised-button color="accent" (click)="openDialogRelation()"> Reationship</button>
-                <button mat-raised-button color="accent"(click)="openDialogKids()"> Kids</button>               
+                           
             </div>
         </div>
         <div fxLayout="row"   > 

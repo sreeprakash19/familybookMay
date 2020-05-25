@@ -5,6 +5,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 
+import {Directive} from '@angular/core';
+import {MAT_CHECKBOX_CLICK_ACTION} from '@angular/material/checkbox';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {ThemePalette} from '@angular/material/core';
 
 import {
   ChangeDetectionStrategy,
@@ -18,14 +22,13 @@ import * as _moment from 'moment';
 //import {default as _rollupMoment} from 'moment';
 
 const moment = _moment;
-import {FormControl} from '@angular/forms';
 
-import {FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {FormBuilder , FormGroup, FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
-    console.log('called', !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)));
+    //console.log('called', !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)));
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
@@ -46,6 +49,8 @@ export const MY_FORMATS = {
 export interface DialogData {
   name: string;
 }
+
+
 
 declare var MediaRecorder: any;
 
@@ -127,8 +132,8 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
       backdropClass: 'backdropBackground'
     });
   }
-  openDialogKids()  {
-    this.kidsdialogRef = this.dialog.open(KidsComponent, {
+  openDialogContact()  {
+    this.kidsdialogRef = this.dialog.open(DetailsComponent, {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
@@ -149,6 +154,87 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
   dosomething() {
     this.showspinner = false;
   }
+}
+@Component({
+  selector: 'app-header-details',
+  template: `
+
+  <mat-card ngStyle.lt-sm="background-color:light-blue; min-height: 50vh; width: 50vw; " ngStyle.gt-xs="background-color:light-blue;   width: 35vw; min-height: 45vh; ">
+    
+    <mat-card-title >{{settingMsg}}</mat-card-title>  
+    <mat-card-content >
+      <form [formGroup]="myForm">
+        <mat-form-field style="width: 200px;" >
+        <mat-label>Display Name</mat-label>
+        
+        <input type="text" matInput placeholder="Enter Name" formControlName= "DisplayName" [errorStateMatcher]="matcher">
+        <mat-icon matSuffix>mode_edit</mat-icon>
+        <mat-error *ngIf="myForm.invalid">{{getNameErrorMessage()}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field style="width: 200px;" >
+            <mat-label>Telephone</mat-label>
+            <span matPrefix>+91 &nbsp;</span>
+            <input type="tel" matInput placeholder="555-555-1234" formControlName= "MyPhonenum" [errorStateMatcher]="matcher">
+            <mat-icon matSuffix>mode_edit</mat-icon>
+            <mat-error *ngIf="myForm.invalid">{{getPhErrorMessage()}}</mat-error>
+          </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+    <button mat-raised-button color ="primary" (click)="ontask()" [style.fontSize.px]="20"> Ok </button>
+    <span fxFlex> </span>
+    <button mat-raised-button  color="primary" (click)="goback()" [style.fontSize.px]="20" [disabled]= "disableback" cdkFocusInitial>Back</button>
+    </mat-card-actions>
+    </mat-card>
+    
+    `
+})
+export class DetailsComponent  implements OnInit  {
+  myForm: FormGroup;
+  settingMsg= 'Your Details';
+  disableback: false;
+
+  matcher = new MyErrorStateMatcher();
+
+  getNameErrorMessage(){
+    if(this.myForm.get('DisplayName').hasError('required')){
+      return 'You must enter a value';
+    } 
+    return this.myForm.get('DisplayName').hasError('minlength') ? '3 digits required': '';
+  }
+  getPhErrorMessage(){
+    if(this.myForm.get('MyPhonenum').hasError('required')){
+      return 'You must enter a value';
+    } 
+    if(this.myForm.get('MyPhonenum').hasError('maxlength')){
+      return 'You must enter 10 digits only';
+    } 
+    return this.myForm.get('MyPhonenum').hasError('minlength') ? 'Atleast 10 digits required' : '';
+  }
+  ngOnInit(){
+    this.myForm = this.formBuilder.group({
+      MyPhonenum: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      DisplayName: ['', [Validators.required, Validators.minLength(3)]]
+    });  
+    this.onChanges();
+  }
+  onChanges(): void {
+    this.myForm.get('MyPhonenum').valueChanges.subscribe(val => {
+      console.log('Ph', val);
+    });
+  }
+  constructor(public dialogRef: MatDialogRef<DetailsComponent>, private formBuilder: FormBuilder){
+
+  }
+
+  ontask(){
+    this.dialogRef.close();
+  }
+  goback(){
+    this.dialogRef.close();
+  }
+
 }
 @Component({
   selector: 'dialog-audio',
@@ -890,7 +976,7 @@ export class PicturesComponent
     
     <mat-card-title >{{settingMsg}}</mat-card-title>  
     <mat-card-content >
-      <form style="padding-top: 10%" [style.fontSize.px]="20" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%">
+      <form style="padding-top: 10%;" [style.fontSize.px]="20" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%">
         <mat-form-field  ngStyle.lt-sm= "width: 95%; " ngStyle.gt-xs= "width: 45%; ">
           <mat-label  >Enter Birthday</mat-label>
           <input matInput [matDatepicker]="picker" [formControl]="birthdate" [errorStateMatcher]="matcher" placeholder="Enter Day">
@@ -1018,16 +1104,48 @@ export class ExampleHeader<D> implements OnDestroy {
 
 @Component({
   selector: 'app-header-gender',
+  styles:[`
+  .demo-section {
+    margin: 8px;
+    padding: 16px;
+  
+    .mat-radio-button {
+      padding: 80px;
+    }
+  }
+
+  `],
   template: `
 
   <mat-card ngStyle.lt-sm="background-color:light-blue; min-height: 50vh; width: 50vw; " ngStyle.gt-xs="background-color:light-blue;   width: 35vw; min-height: 45vh; ">
     
     <mat-card-title >{{settingMsg}}</mat-card-title>  
     <mat-card-content >
-      <form style="padding-top: 10%" [style.fontSize.px]="20" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%">
+      <mat-radio-group [formControl]="Gender" style="padding-top: 10%" [style.fontSize.px]="20" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%">
+        <div style="width:200px">          
+          <mat-radio-button value="Male" fxFlexAlign="center">
+            <mat-label>Male</mat-label>   
+          </mat-radio-button>
+          <span fxFlex="grow" ></span>
+          <fa-icon [icon]="['fas', 'male']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+        </div>
 
-
-      </form>
+        <div style="width:200px">        
+          <mat-radio-button value="Female"  fxFlexAlign="center">
+            <mat-label>Female</mat-label> 
+          </mat-radio-button> 
+          <span fxFlex="grow" ></span>
+          <fa-icon [icon]="['fas', 'female']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+        </div>
+        
+        <div style="width:200px">          
+          <mat-radio-button value="transgender"  fxFlexAlign="center">
+            <mat-label> TransGender</mat-label>          
+          </mat-radio-button> 
+          <span fxFlex="grow" ></span>
+          <fa-icon [icon]="['fas', 'transgender']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+        </div>
+      </mat-radio-group>
     </mat-card-content>
     <mat-card-actions>
     <button mat-raised-button color ="primary" (click)="ontask()" [style.fontSize.px]="20"> Ok </button>
@@ -1035,12 +1153,12 @@ export class ExampleHeader<D> implements OnDestroy {
     <button mat-raised-button  color="primary" (click)="goback()" [style.fontSize.px]="20" [disabled]= "disableback" cdkFocusInitial>Back</button>
     </mat-card-actions>
     </mat-card>
-    
+
     `
 })
 export class GenderComponent {
 
-  settingMsg = 'Edit Dates';
+  settingMsg = 'Your Gender';
   disableback: false;
   Gender = new FormControl('Male', [Validators.required]);
   matcher = new MyErrorStateMatcher();
@@ -1060,13 +1178,44 @@ export class GenderComponent {
 
 @Component({
   selector: 'app-header-relationship',
+  styles: [`
+  .demo-checkbox {
+    margin: 8px 0;
+  }
+`],
   template: `
 
   <mat-card ngStyle.lt-sm="background-color:light-blue; min-height: 50vh; width: 50vw; " ngStyle.gt-xs="background-color:light-blue;   width: 35vw; min-height: 45vh; ">
     
     <mat-card-title >{{settingMsg}}</mat-card-title>  
     <mat-card-content >
-     
+    <mat-card>
+    <mat-card-content [style.fontSize.px]="20" >      
+      <form [formGroup]="myForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%"  >
+        <div style="width:200px;">       
+        <fa-icon [icon]="['fas', 'kiss-wink-heart']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+          <mat-checkbox formControlName="Relation" labelPosition="after" fxFlex="grow" fxFlexAlign="center">
+          I have a Partner
+          </mat-checkbox>
+        </div>
+        <div style="width:200px;">
+          <fa-icon [icon]="['fas', 'child']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
+          <mat-checkbox formControlName="kidsEnable" labelPosition="after" fxFlex="grow"  fxFlexAlign="center" >
+            Kids
+          </mat-checkbox>
+          <mat-slider fxFlexAlign="center"
+          [disabled]= "!myForm.get('kidsEnable').value"
+          max= 10
+          min= 0
+          step= 1
+          thumbLabel= true
+          tickInterval= 1
+          formControlName="kidsnumber">
+          </mat-slider>
+        </div>
+        
+      </form>
+
     </mat-card-content>
     <mat-card-actions>
     <button mat-raised-button color ="primary" (click)="ontask()" [style.fontSize.px]="20"> Ok </button>
@@ -1077,14 +1226,40 @@ export class GenderComponent {
     
     `
 })
-export class RelationshipComponent {
-
+export class RelationshipComponent implements OnInit {
+  myForm: FormGroup;
   settingMsg= 'Your Relationship Status';
+  disabledslider: true;
   disableback: false;
-  birthdate = new FormControl(moment(), [Validators.required]);
-  Annidate = new FormControl(moment(), [Validators.required]);
   matcher = new MyErrorStateMatcher();
-  constructor(public dialogRef: MatDialogRef<RelationshipComponent>){
+  checked = false;
+  indeterminate = false;
+  labelPosition: 'before' | 'after' = 'after';
+  disabled = false;
+
+  ngOnInit(){
+    this.myForm = this.formBuilder.group({
+      Relation: false,
+      kidsEnable: false,
+      kidsnumber: 0
+    });
+  
+    this.onChanges();
+  }
+  onChanges(): void {
+    this.myForm.get('kidsEnable').valueChanges.subscribe(val => {
+      if(val === false){
+        this.myForm.patchValue( 
+          { kidsnumber : 0 }
+        );
+      } else{
+        this.myForm.patchValue( 
+          { kidsnumber : 1 }
+        );
+      }
+    });
+  }
+  constructor(public dialogRef: MatDialogRef<RelationshipComponent>, private formBuilder: FormBuilder){
 
   }
 
@@ -1097,45 +1272,5 @@ export class RelationshipComponent {
 
 
 }
-
-@Component({
-  selector: 'app-header-kids',
-  template: `
-
-  <mat-card ngStyle.lt-sm="background-color:light-blue; min-height: 50vh; width: 50vw; " ngStyle.gt-xs="background-color:light-blue;   width: 35vw; min-height: 45vh; ">
-    
-    <mat-card-title >{{settingMsg}}</mat-card-title>  
-    <mat-card-content >
-      
-    </mat-card-content>
-    <mat-card-actions>
-    <button mat-raised-button color ="primary" (click)="ontask()" [style.fontSize.px]="20"> Ok </button>
-    <span fxFlex> </span>
-    <button mat-raised-button  color="primary" (click)="goback()" [style.fontSize.px]="20" [disabled]= "disableback" cdkFocusInitial>Back</button>
-    </mat-card-actions>
-    </mat-card>
-    
-    `
-})
-export class KidsComponent {
-
-  settingMsg= 'Kids Details';
-  disableback: false;
-  birthdate = new FormControl(moment(), [Validators.required]);
-  Annidate = new FormControl(moment(), [Validators.required]);
-  matcher = new MyErrorStateMatcher();
-  constructor(public dialogRef: MatDialogRef<KidsComponent>){
-
-  }
-
-  ontask(){
-    this.dialogRef.close();
-  }
-  goback(){
-    this.dialogRef.close();
-  }
-
-}
-
 
 

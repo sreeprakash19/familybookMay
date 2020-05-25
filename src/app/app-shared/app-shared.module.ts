@@ -5,7 +5,8 @@ import { AppMaterialModule} from '../app-material/app-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule , FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faArrowAltCircleDown, faAngleDoubleLeft, faAngleDoubleRight, faAngleDoubleUp, faPlus, faMinus, faCalendarAlt, faGifts} from '@fortawesome/free-solid-svg-icons';
+// tslint:disable-next-line: max-line-length
+import { faArrowAltCircleDown, faAngleDoubleLeft, faAngleDoubleRight, faAngleDoubleUp, faPlus, faMinus, faCalendarAlt, faGifts, faMale, faFemale, faTransgender, faKissWinkHeart, faChild} from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   declarations: [],
@@ -27,6 +28,7 @@ import { faArrowAltCircleDown, faAngleDoubleLeft, faAngleDoubleRight, faAngleDou
 })
 export class AppSharedModule {
   constructor(private library: FaIconLibrary) {
-    library.addIcons(faAngleDoubleLeft, faAngleDoubleRight, faAngleDoubleUp, faPlus, faMinus, faCalendarAlt, faGifts, faArrowAltCircleDown);
+    // tslint:disable-next-line: max-line-length
+    library.addIcons(faAngleDoubleLeft, faAngleDoubleRight, faAngleDoubleUp, faPlus, faMinus, faCalendarAlt, faGifts, faArrowAltCircleDown, faMale, faFemale, faTransgender,  faKissWinkHeart, faChild);
   }
  }
