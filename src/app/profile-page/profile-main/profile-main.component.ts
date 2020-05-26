@@ -20,11 +20,13 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import * as _moment from 'moment';
 //import {default as _rollupMoment} from 'moment';
-
 const moment = _moment;
 
 import {FormBuilder , FormGroup, FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
+
+import { SearchCountryField, TooltipLabel, CountryISO } from 'ngx-intl-tel-input';
+
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
@@ -32,7 +34,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
-
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MMM',
@@ -44,21 +45,22 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-
-
 export interface DialogData {
   name: string;
 }
-
-
-
 declare var MediaRecorder: any;
-
 export enum RecordingState {
   STOPPED = 'stopped',
   RECORDING = 'recording',
   FORBIDDEN = 'forbidden',
 }
+
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import { ElementRef, Input, Optional, Self} from '@angular/core';
+import { ControlValueAccessor, NgControl} from '@angular/forms';
+import {MatFormFieldControl} from '@angular/material/form-field';
+
 
 @Component({
   selector: 'app-profile-main',
@@ -155,31 +157,50 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
     this.showspinner = false;
   }
 }
+
+/** Data structure for holding telephone number. */
+export class MyTel {
+  constructor(public area: string, public exchange: string, public subscriber: string) {}
+}
+
 @Component({
   selector: 'app-header-details',
+  styles:[`  
+  `],
   template: `
 
-  <mat-card ngStyle.lt-sm="background-color:light-blue; min-height: 50vh; width: 50vw; " ngStyle.gt-xs="background-color:light-blue;   width: 35vw; min-height: 45vh; ">
+  <mat-card fxLayout="column" fxLayoutAlign="center center" ngStyle.lt-sm="background-color:light-blue; min-height: 50vh; width: 70vw; color: red; " ngStyle.gt-xs="background-color:light-blue;   width: 35vw; min-height: 45vh; color: red;">
     
     <mat-card-title >{{settingMsg}}</mat-card-title>  
     <mat-card-content >
-      <form [formGroup]="myForm">
-        <mat-form-field style="width: 200px;" >
-        <mat-label>Display Name</mat-label>
-        
+      <form [formGroup]="myForm" >
+        <mat-form-field >
+        <mat-label>Display Name</mat-label>        
         <input type="text" matInput placeholder="Enter Name" formControlName= "DisplayName" [errorStateMatcher]="matcher">
         <mat-icon matSuffix>mode_edit</mat-icon>
         <mat-error *ngIf="myForm.invalid">{{getNameErrorMessage()}}</mat-error>
         </mat-form-field>
-
-        <mat-form-field style="width: 200px;" >
-            <mat-label>Telephone</mat-label>
-            <span matPrefix>+91 &nbsp;</span>
-            <input type="tel" matInput placeholder="555-555-1234" formControlName= "MyPhonenum" [errorStateMatcher]="matcher">
-            <mat-icon matSuffix>mode_edit</mat-icon>
-            <mat-error *ngIf="myForm.invalid">{{getPhErrorMessage()}}</mat-error>
-          </mat-form-field>
       </form>
+    </mat-card-content>
+    <mat-card-title >{{settingMsg}}</mat-card-title>  
+    <mat-card-content>
+      <form #f="ngForm" [formGroup]="phoneForm" ngStyle.lt-sm="padding-left: 20px;" ngStyle.gt-xs="padding-left: 20px; width: 275px; height: 100px;">
+        <ngx-intl-tel-input 
+          
+          [preferredCountries]="preferredCountries"
+          [enableAutoCountrySelect]="false" 
+          [enablePlaceholder]="true" 
+          [searchCountryFlag]="true"
+          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+          [selectFirstCountry]="false" 
+          [selectedCountryISO]="CountryISO.India"
+          [maxLength]="10" 
+          [tooltipField]="TooltipLabel.Name" 
+          [phoneValidation]="true" 
+          [separateDialCode]="separateDialCode"
+          name="phone" formControlName="phone">
+        </ngx-intl-tel-input>
+      </form>        
     </mat-card-content>
     <mat-card-actions>
     <button mat-raised-button color ="primary" (click)="ontask()" [style.fontSize.px]="20"> Ok </button>
@@ -194,9 +215,18 @@ export class DetailsComponent  implements OnInit  {
   myForm: FormGroup;
   settingMsg= 'Your Details';
   disableback: false;
-
+	separateDialCode = true;
+	SearchCountryField = SearchCountryField;
+	TooltipLabel = TooltipLabel;
+	CountryISO = CountryISO;
+	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
+	phoneForm = new FormGroup({
+		phone: new FormControl(undefined, [Validators.required])
+	});
   matcher = new MyErrorStateMatcher();
-
+  onCountryChange($event){
+    console.log($event);
+  }
   getNameErrorMessage(){
     if(this.myForm.get('DisplayName').hasError('required')){
       return 'You must enter a value';
@@ -224,6 +254,7 @@ export class DetailsComponent  implements OnInit  {
       console.log('Ph', val);
     });
   }
+  // tslint:disable-next-line: max-line-length
   constructor(public dialogRef: MatDialogRef<DetailsComponent>, private formBuilder: FormBuilder){
 
   }
@@ -236,6 +267,199 @@ export class DetailsComponent  implements OnInit  {
   }
 
 }
+
+@Component({
+  selector: 'example-tel-input',
+  template:
+  `
+  <div [formGroup]="parts" class="example-tel-input-container">
+  <input class="example-tel-input-element" formControlName="countrycode" size="3" aria-label="Country code" (input)="_handleInput()">
+  <span class="example-tel-input-spacer">&ndash;</span>
+  <input class="example-tel-input-element" formControlName="area" size="3" aria-label="Area code" (input)="_handleInput()">
+  <span class="example-tel-input-spacer">&ndash;</span>
+  <input class="example-tel-input-element" formControlName="exchange" size="3" aria-label="Exchange code" (input)="_handleInput()">
+  <span class="example-tel-input-spacer">&ndash;</span>
+  <input class="example-tel-input-element" formControlName="subscriber" size="4" aria-label="Subscriber number" (input)="_handleInput()">
+</div>
+
+  `,
+  styles: [`
+  .intl-tel-input {
+    display: block !important;
+  }
+  
+  .intl-tel-input .country-list {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    box-shadow: none;
+    border-color: #c7cace;
+    font-size: 14px;
+    margin-left: 0;
+    margin-top: -1px;
+    width: 165px;
+  }
+  
+  .flag-container.open + input {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+
+  .example-tel-input-container {
+    display: flex;
+    width : 100px;
+  }
+  
+  .example-tel-input-element {
+    border: none;
+    background: none;
+    padding: 0;
+    outline: none;
+    font: inherit;
+    text-align: center;
+  }
+  
+  .example-tel-input-spacer {
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+  
+  :host.example-floating .example-tel-input-spacer {
+    opacity: 1;
+  }
+  `],
+  providers: [{provide: MatFormFieldControl, useExisting: MyTelInput}],
+  host: {
+    '[class.example-floating]': 'shouldLabelFloat',
+    '[id]': 'id',
+    '[attr.aria-describedby]': 'describedBy',
+  }
+})
+export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
+  static nextId = 0;
+
+  parts: FormGroup;
+  stateChanges = new Subject<void>();
+  focused = false;
+  errorState = false;
+  controlType = 'example-tel-input';
+  id = `example-tel-input-${MyTelInput.nextId++}`;
+  describedBy = '';
+  onChange = (_: any) => {};
+  onTouched = () => {};
+
+  get empty() {
+    const {value: {area, exchange, subscriber}} = this.parts;
+
+    return !area && !exchange && !subscriber;
+  }
+
+  get shouldLabelFloat() { return this.focused || !this.empty; }
+
+  @Input()
+  get placeholder(): string { return this._placeholder; }
+  set placeholder(value: string) {
+    this._placeholder = value;
+    this.stateChanges.next();
+  }
+  private _placeholder: string;
+
+  @Input()
+  get required(): boolean { return this._required; }
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
+    this.stateChanges.next();
+  }
+  private _required = false;
+
+  @Input()
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+    this._disabled ? this.parts.disable() : this.parts.enable();
+    this.stateChanges.next();
+  }
+  private _disabled = false;
+
+  @Input()
+  get value(): MyTel | null {
+    if (this.parts.valid) {
+      const {value: {area, exchange, subscriber}} = this.parts;
+      return new MyTel(area, exchange, subscriber);
+    }
+    return null;
+  }
+  set value(tel: MyTel | null) {
+    const {area, exchange, subscriber} = tel || new MyTel('', '', '');
+    this.parts.setValue({area, exchange, subscriber});
+    this.stateChanges.next();
+  }
+
+  constructor(
+    formBuilder: FormBuilder,
+    private _focusMonitor: FocusMonitor,
+    private _elementRef: ElementRef<HTMLElement>,
+    @Optional() @Self() public ngControl: NgControl) {
+
+    this.parts = formBuilder.group({
+      countrycode: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      area: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      exchange: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      subscriber: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]],
+    });
+
+    _focusMonitor.monitor(_elementRef, true).subscribe(origin => {
+      if (this.focused && !origin) {
+        this.onTouched();
+      }
+      this.focused = !!origin;
+      this.stateChanges.next();
+    });
+
+    if (this.ngControl != null) {
+      this.ngControl.valueAccessor = this;
+    }
+  }
+
+  ngOnDestroy() {
+    this.stateChanges.complete();
+    this._focusMonitor.stopMonitoring(this._elementRef);
+  }
+
+  setDescribedByIds(ids: string[]) {
+    this.describedBy = ids.join(' ');
+  }
+
+  onContainerClick(event: MouseEvent) {
+    if ((event.target as Element).tagName.toLowerCase() != 'input') {
+      this._elementRef.nativeElement.querySelector('input')!.focus();
+    }
+  }
+
+  writeValue(tel: MyTel | null): void {
+    this.value = tel;
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  _handleInput(): void {
+    this.onChange(this.value);
+  }
+
+  static ngAcceptInputType_disabled: boolean | string | null | undefined;
+  static ngAcceptInputType_required: boolean | string | null | undefined;
+}
+
+
 @Component({
   selector: 'dialog-audio',
   template:`

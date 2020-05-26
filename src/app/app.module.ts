@@ -11,7 +11,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppSharedModule } from './app-shared/app-shared.module';
 import { CustomerDashboardModule } from './customer-dashboard/customer-dashboard.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 const config = {
@@ -37,8 +36,8 @@ const config = {
     AngularFireAuthModule, // auth
     AngularFireStorageModule, BrowserAnimationsModule, // storage
     AppSharedModule,
-    CustomerDashboardModule,
-    FontAwesomeModule
+    CustomerDashboardModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
