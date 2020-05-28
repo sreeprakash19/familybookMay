@@ -80,8 +80,18 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
   genderdialogRef: any;
   relationdialogRef: any;
   kidsdialogRef: any;
-
-  constructor(public auth: AuthService,public dialog: MatDialog) {
+  profileForm = this.formBuilder.group({
+    DisplayName: [null, [Validators.required]],
+    MyPhoneNum: this.formBuilder.group({
+      countryCode : [null, [Validators.required]],
+      dialCode: [null, [Validators.required]],
+      id: [null, [Validators.required]],
+      internationalNumber: [null, [Validators.required]],
+      nationalNumber: [null, [Validators.required]],
+      number: [null, [Validators.required]]
+    })
+  });
+  constructor(public formBuilder: FormBuilder, public auth: AuthService,public dialog: MatDialog) {
     this.auth.user$.subscribe(userdata => {
       if (userdata !== undefined && userdata !== null) {
         if (userdata.customphotoURL === null){
@@ -98,6 +108,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
     });
    }
   ngOnInit(): void {
+
   }
   ngOnDestroy(){
     if(this.audiodialogRef !== null && this.audiodialogRef !== undefined){
@@ -139,6 +150,26 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
+
+    this.kidsdialogRef.afterClosed().subscribe(result => {
+      if(result !== null){
+        const myobj= result.MyPhonenum as FormGroup;
+        console.log(result.MyPhonenum, myobj, 'val', );
+        this.profileForm.patchValue(
+          {
+            ...result,
+            MyPhoneNum: myobj
+          }
+        );
+        /*this.profileForm.patchValue({
+          DisplayName: result.DisplayName,
+          MyPhoneNum: result.MyPhoneNum
+        });*/
+        console.log(this.profileForm.value);
+      }
+    });
+    
+
   }
 
   openDialogGreeting(){
@@ -182,11 +213,10 @@ export class MyTel {
         </mat-form-field>
       </form>
     </mat-card-content>
-    <mat-card-title >{{settingMsg}}</mat-card-title>  
+    <mat-card-title >Your Phone No:</mat-card-title>  
     <mat-card-content>
       <form #f="ngForm" [formGroup]="phoneForm" ngStyle.lt-sm="padding-left: 20px;" ngStyle.gt-xs="padding-left: 20px; width: 275px; height: 100px;">
-        <ngx-intl-tel-input 
-          
+        <ngx-intl-tel-input          
           [preferredCountries]="preferredCountries"
           [enableAutoCountrySelect]="false" 
           [enablePlaceholder]="true" 
@@ -213,7 +243,7 @@ export class MyTel {
 })
 export class DetailsComponent  implements OnInit  {
   myForm: FormGroup;
-  settingMsg= 'Your Details';
+  settingMsg= 'Your Name';
   disableback: false;
 	separateDialCode = true;
 	SearchCountryField = SearchCountryField;
@@ -244,14 +274,14 @@ export class DetailsComponent  implements OnInit  {
   }
   ngOnInit(){
     this.myForm = this.formBuilder.group({
-      MyPhonenum: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      MyPhonenum: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       DisplayName: ['', [Validators.required, Validators.minLength(3)]]
     });  
     this.onChanges();
   }
   onChanges(): void {
     this.myForm.get('MyPhonenum').valueChanges.subscribe(val => {
-      console.log('Ph', val);
+      //console.log('Ph', val);
     });
   }
   // tslint:disable-next-line: max-line-length
@@ -260,7 +290,11 @@ export class DetailsComponent  implements OnInit  {
   }
 
   ontask(){
-    this.dialogRef.close();
+    this.myForm.patchValue(
+      { MyPhonenum : this.phoneForm.get('phone').value}
+    );
+    //console.log('form value', this.myForm.value);
+    this.dialogRef.close(this.myForm.getRawValue());
   }
   goback(){
     this.dialogRef.close();
@@ -505,7 +539,7 @@ export class AudioComponent implements OnInit, OnDestroy {
       this.state = RecordingState.STOPPED;
       if (data.downloadaudioURL !== null) {
         this.audioFiles.push(data.downloadaudioURL);
-        console.log('hi',data.downloadaudioURL);
+        //console.log('hi',data.downloadaudioURL);
         this.playgreeting();
       } else {
         this.recordgreeting();
@@ -513,13 +547,13 @@ export class AudioComponent implements OnInit, OnDestroy {
     }
     ngOnInit(){
 
-      const mediaConstraints = {
+      /*const mediaConstraints = {
         video: false,
         audio: true
       };
       navigator.mediaDevices
         .getUserMedia(mediaConstraints)
-        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
+        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));*/
     }
     ngOnDestroy(){
       if(this.chunks !== null){
@@ -640,7 +674,7 @@ export class AudioComponent implements OnInit, OnDestroy {
     } 
     connectionerror() {
       this.disablebutton = true;
-      alert('Uh-oh, Connection Issue, Check Internet connection');
+      alert('Uh-oh, Connection Issue, Check Internet connection1');
     }
     showError() {
       this.settingMsg = 'Your Audio- Error';
@@ -653,7 +687,7 @@ export class AudioComponent implements OnInit, OnDestroy {
   
       this.disableback = false;
   
-      alert('Uh-oh, Connection Issue, Check Internet connection');
+      alert('Uh-oh, Connection Issue, Check Internet connection2');
     }    
     startRecording() {
       if (this.state === RecordingState.STOPPED) {//start recording
@@ -1044,12 +1078,12 @@ export class PicturesComponent
 
     this.disableback = false;
 
-    alert('Uh-oh, Connection Issue, Check Internet connection');
+    alert('Uh-oh, Connection Issue, Check Internet connection3');
   }
 
   connectionerror() {
     this.disablebutton = true;
-    alert('Uh-oh, Connection Issue, Check Internet connection');
+    alert('Uh-oh, Connection Issue, Check Internet connection4');
   }
   async ontask() {
     switch (this.AudioOption) {
