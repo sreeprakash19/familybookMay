@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthService as AuthGuard } from './services/auth.service';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full'},
    // tslint:disable-next-line: max-line-length
    { path: 'login', loadChildren: () => import('./customer-dashboard/customer-dashboard.module').then(m => m.CustomerDashboardModule)},
    { path: 'profile', loadChildren: () => import('./profile-page/profile-page.module').then(m => m.ProfilePageModule),
@@ -11,7 +12,7 @@ const routes: Routes = [
    canActivate: [AuthGuard] },
    { path: 'map', loadChildren: () => import('./my-map-details/my-map-details.module').then(m => m.MyMapDetailsModule),
    canActivate: [AuthGuard] },
-   { path: '**', redirectTo: 'login', pathMatch: 'full'},
+   { path: '**', redirectTo: 'login', pathMatch: 'full'}
 
   ];
 

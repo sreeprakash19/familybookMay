@@ -58,9 +58,14 @@ export enum RecordingState {
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import { ElementRef, Input, Optional, Self} from '@angular/core';
-import { ControlValueAccessor, NgControl} from '@angular/forms';
+import { ControlValueAccessor, NgControl, ValidatorFn, ValidationErrors} from '@angular/forms';
 import {MatFormFieldControl} from '@angular/material/form-field';
 
+export const checkprofilepage: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
+  const name = control.get('DisplayName');
+  const alterEgo = control.get('MyPhoneNum').get('number');
+  return name && alterEgo && name.value === alterEgo.value ? { checkprofilepage: true } : null;
+};
 
 @Component({
   selector: 'app-profile-main',
@@ -90,7 +95,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
       nationalNumber: [null, [Validators.required]],
       number: [null, [Validators.required]]
     })
-  });
+  }, { validators: checkprofilepage });
   constructor(public formBuilder: FormBuilder, public auth: AuthService,public dialog: MatDialog) {
     this.auth.user$.subscribe(userdata => {
       if (userdata !== undefined && userdata !== null) {
@@ -152,24 +157,16 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
     });
 
     this.kidsdialogRef.afterClosed().subscribe(result => {
-      if(result !== null){
+      if(result !== null && result !== undefined ){
         const myobj= result.MyPhonenum as FormGroup;
-        console.log(result.MyPhonenum, myobj, 'val', );
         this.profileForm.patchValue(
           {
             ...result,
             MyPhoneNum: myobj
           }
         );
-        /*this.profileForm.patchValue({
-          DisplayName: result.DisplayName,
-          MyPhoneNum: result.MyPhoneNum
-        });*/
-        console.log(this.profileForm.value);
       }
     });
-    
-
   }
 
   openDialogGreeting(){
