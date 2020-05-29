@@ -22,7 +22,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     NgxIntlTelInputModule
   ],
   entryComponents: [
-    AudioComponent,PicturesComponent,DatepickerComponent
+    AudioComponent,PicturesComponent,DatepickerComponent, RelationshipComponent, GenderComponent, DetailsComponent
   ]
 })
 export class ProfilePageModule { }
