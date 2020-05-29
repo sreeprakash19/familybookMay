@@ -41,14 +41,14 @@ export class RightSidenavContentComponent {
           if (userdata.photoURL !== undefined && userdata.photoURL !== null) {
             this.imageStr = userdata.photoURL;
           } else {
-            this.imageStr = './assets/girl.png';
+            this.imageStr = 'https://raw.githubusercontent.com/angular/angular/master/aio/content/examples/property-binding/src/assets/girl.png';
           }
         } else {
           this.imageStr = userdata.customphotoURL;
         }
       } else {
         this.userloggedin = false;
-        this.imageStr = './assets/girl.png';
+        this.imageStr = 'https://raw.githubusercontent.com/angular/angular/master/aio/content/examples/property-binding/src/assets/girl.png';
       }
     });
   }
