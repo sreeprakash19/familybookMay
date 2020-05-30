@@ -77,7 +77,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
   showspinner = true;
   name: string;
   mylocaluser: User = null;
-  imageStr = './assets/girl.png';
+  imageStr = 'https://raw.githubusercontent.com/gmanojisaac/familybookMay/master/src/assets/girl.png';
   
   audiodialogRef: any;
   videodialogRef: any;
@@ -103,7 +103,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
           if ( userdata.photoURL !== undefined && userdata.photoURL !== null){
             this.imageStr = userdata.photoURL;
           } else{
-            this.imageStr = './assets/girl.png';
+            this.imageStr = 'https://raw.githubusercontent.com/gmanojisaac/familybookMay/master/src/assets/girl.png';
           }
         } else{
           this.imageStr = userdata.customphotoURL;
