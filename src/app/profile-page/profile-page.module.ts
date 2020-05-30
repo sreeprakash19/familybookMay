@@ -27,3 +27,5 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
   ]
 })
 export class ProfilePageModule { }
+//https://stackblitz.com/angular/gxymgjpprdy?file=src%2Fapp%2Fdatepicker-views-selection-example.ts
+//https://ngx-intl-tel-input-demo.stackblitz.io/
