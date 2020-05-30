@@ -13,7 +13,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [ GenderComponent,MyTelInput,  RelationshipComponent, DetailsComponent, AudioComponent,PicturesComponent, DatepickerComponent, ExampleHeader, ProfileMainComponent , RightSidenavContentComponent, CustomerDashboardComponent, CenterContentComponent],
+  declarations: [ GenderComponent, MyTelInput,  RelationshipComponent, DetailsComponent, AudioComponent,PicturesComponent, DatepickerComponent, ExampleHeader, ProfileMainComponent , RightSidenavContentComponent, CustomerDashboardComponent, CenterContentComponent],
   imports: [
     CommonModule,
     AppSharedModule,
@@ -22,7 +22,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     NgxIntlTelInputModule
   ],
   entryComponents: [
-    AudioComponent,PicturesComponent,DatepickerComponent, RelationshipComponent, GenderComponent, DetailsComponent
+    // tslint:disable-next-line: max-line-length
+    AudioComponent,PicturesComponent, MyTelInput, DatepickerComponent, RelationshipComponent, GenderComponent, DetailsComponent, ExampleHeader
   ]
 })
 export class ProfilePageModule { }
