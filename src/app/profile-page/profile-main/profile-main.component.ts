@@ -18,7 +18,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, MAT_DATE_LOCALE} from '@a
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment'
 // tslint:disable-next-line:no-duplicate-imports
 //import {default as _rollupMoment, Moment} from 'moment';
 
