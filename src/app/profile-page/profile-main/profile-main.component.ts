@@ -215,20 +215,21 @@ export class MyTel {
     <mat-card-title >Your Phone No:</mat-card-title>  
     <mat-card-content>
       <form #f="ngForm" [formGroup]="phoneForm" ngStyle.lt-sm="padding-left: 20px;" ngStyle.gt-xs="padding-left: 20px; width: 275px; height: 100px;">
-        <ngx-intl-tel-input          
-          [preferredCountries]="preferredCountries"
-          [enableAutoCountrySelect]="false" 
-          [enablePlaceholder]="true" 
-          [searchCountryFlag]="true"
-          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
-          [selectFirstCountry]="false" 
-          [selectedCountryISO]="CountryISO.India"
-          [maxLength]="10" 
-          [tooltipField]="TooltipLabel.Name" 
-          [phoneValidation]="true" 
-          [separateDialCode]="separateDialCode"
-          name="phone" formControlName="phone">
-        </ngx-intl-tel-input>
+      <ngx-intl-tel-input 
+      [cssClass]="'custom'" 
+      [preferredCountries]="preferredCountries"
+      [enableAutoCountrySelect]="false" 
+      [enablePlaceholder]="true" 
+      [searchCountryFlag]="true"
+      [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+      [selectFirstCountry]="false" 
+      [selectedCountryISO]="CountryISO.India"
+      [maxLength]="15" 
+      [tooltipField]="TooltipLabel.Name" 
+      [phoneValidation]="true" 
+      [separateDialCode]="separateDialCode"
+      name="phone" formControlName="phone">
+    </ngx-intl-tel-input>
       </form>        
     </mat-card-content>
     <mat-card-actions>
@@ -241,10 +242,7 @@ export class MyTel {
     `
 })
 export class DetailsComponent  implements OnInit  {
-  myForm: FormGroup;
-  settingMsg= 'Your Name';
-  disableback: false;
-	separateDialCode = true;
+  separateDialCode = true;
 	SearchCountryField = SearchCountryField;
 	TooltipLabel = TooltipLabel;
 	CountryISO = CountryISO;
@@ -252,7 +250,17 @@ export class DetailsComponent  implements OnInit  {
 	phoneForm = new FormGroup({
 		phone: new FormControl(undefined, [Validators.required])
 	});
+
+
+  myForm: FormGroup;
+  settingMsg= 'Your Name';
+  disableback: false;
+
   matcher = new MyErrorStateMatcher();
+  changePreferredCountries() {
+		this.preferredCountries = [CountryISO.India, CountryISO.Canada];
+  }
+  
   onCountryChange($event){
     console.log($event);
   }
