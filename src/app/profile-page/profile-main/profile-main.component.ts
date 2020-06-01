@@ -554,13 +554,13 @@ export class AudioComponent implements OnInit, OnDestroy {
     }
     ngOnInit(){
 
-      /*const mediaConstraints = {
+      const mediaConstraints = {
         video: false,
         audio: true
       };
       navigator.mediaDevices
         .getUserMedia(mediaConstraints)
-        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));*
+        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
     }
     ngOnDestroy(){
       if(this.chunks !== null){
