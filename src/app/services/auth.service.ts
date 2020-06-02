@@ -13,6 +13,13 @@ export interface IGeometry {
   type: string;
   coordinates: number[];
 }
+export interface Profile
+{
+  displayName ?: string;
+  phoneNumber ?: string;
+  Gender ?: string;
+  BirthDate ?: string;
+}
 export interface User{
   uid: string;
   email: string;
@@ -95,6 +102,8 @@ export class AuthService implements CanActivate {
   private updateUserData(user, olduser ){
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
     const familyRef: AngularFirestoreDocument<UserFamily> = this.afs.doc(`family/${user.uid}`);
+    const profref: AngularFirestoreDocument<Profile> = this.afs.doc(`profile/${user.uid}`);
+    
     const data = {
       uid: user.uid,
       email: user.email,
@@ -111,6 +120,7 @@ export class AuthService implements CanActivate {
       GiftsBank: 0,
       downloadaudioURL: null
     };
+    
     const familydata = {
       father_nickname:'',
       father_name: '',
