@@ -664,7 +664,7 @@ export class AudioComponent implements OnInit, OnDestroy {
     <mat-card-content fxFlex fxLyout="column" fxLayoutAlign="center center">
       <img mat-card-lg-image [fxShow]= "showimage ? true :  false" src= "{{imagesrc}}" (load)="AfterVideoLoad()">
       <video #video autoplay playsinline  [fxShow]= "showcamera ? true :  false" (durationchange)="AfterVideoLoad()"></video>
-      <canvas [fxShow]="showcanvas ? true : false" #canvas id="canvas" width="200px" height="200px"></canvas>
+      <canvas [fxShow]="showcanvas ? true : false" #canvas id="canvas" width="250px" height="200px"></canvas>
       <mat-spinner [fxShow]= "showspinner ? true :  false" [diameter]="30"></mat-spinner>
     </mat-card-content>
     <mat-card-actions>
@@ -792,7 +792,7 @@ export class PicturesComponent
     this.videoElement = this.video.nativeElement;
     navigator.mediaDevices
       .getUserMedia({
-        video: { width: 200, height: 200, facingMode: 'user', aspectRatio: .5 }
+        video: { width: 250, height: 200, facingMode: 'user', aspectRatio: .5 }
       })
       .then(stream => {
         this.videoElement.srcObject = stream;
@@ -954,7 +954,7 @@ export class PicturesComponent
         this.context = this.canvasElement.getContext('2d');
         this.AudioOption = 'Save';
         this.videostreamRef.getTracks().map((val) => {
-          this.context.drawImage(this.videoElement, 0, 0, 200, 200);
+          this.context.drawImage(this.videoElement, 0, 0, 20, 200);
           this.videostreamOn = false;
           val.stop();
         });
