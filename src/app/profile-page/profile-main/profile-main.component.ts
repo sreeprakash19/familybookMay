@@ -292,7 +292,7 @@ export class DetailsComponent  implements OnInit  {
 @Component({
   selector: 'dialog-audio',
   template:`
-  <mat-card fxFlex ngStyle.lt-sm="background:gold; height: 52vh; width: 72vw;" ngStyle.gt-xs="background:gold; height: 40vh; width: 30vw;" fxLayout="column" fxLayoutAlign="space-around center">
+  <mat-card fxFlex ngStyle.lt-sm="background:gold; height: 52vh; width: 70vw;" ngStyle.gt-xs="background:gold; height: 40vh; width: 30vw;" fxLayout="column" fxLayoutAlign="space-around center">
     <mat-card-title>{{settingMsg}}</mat-card-title>  
     <audio *ngFor="let audio of audioFiles" ngStyle.lt-sm="width: 50vw" controls='true' [src]="audio" (error) = "connectionerror()">
     </audio>
@@ -657,14 +657,14 @@ export class AudioComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'dialog-picture',
   template:`
-    <mat-card ngStyle.lt-sm="background:gold; height: 55vh; width: 7vw;" ngStyle.gt-xs="background:gold;  height: 50vh; width: 25vw;" fxFlex  fxLayout="column" fxLayoutAlign="center center">
+    <mat-card ngStyle.lt-sm="background:gold; height: 54vh; width: 70vw;" ngStyle.gt-xs="background:gold;  height: 50vh; width: 25vw;" fxFlex  fxLayout="column" fxLayoutAlign="center center">
     
     <mat-card-title >{{settingMsg}}</mat-card-title>  
 
     <mat-card-content fxFlex fxLyout="column" fxLayoutAlign="center center">
       <img mat-card-lg-image [fxShow]= "showimage ? true :  false" src= "{{imagesrc}}" (load)="AfterVideoLoad()">
       <video #video autoplay playsinline  [fxShow]= "showcamera ? true :  false" (durationchange)="AfterVideoLoad()"></video>
-      <canvas [fxShow]="showcanvas ? true : false" #canvas id="canvas" width="250px" height="180px"></canvas>
+      <canvas [fxShow]="showcanvas ? true : false" #canvas id="canvas" width="220px" height="180px"></canvas>
       <mat-spinner [fxShow]= "showspinner ? true :  false" [diameter]="30"></mat-spinner>
     </mat-card-content>
     <mat-card-actions>
@@ -792,7 +792,7 @@ export class PicturesComponent
     this.videoElement = this.video.nativeElement;
     navigator.mediaDevices
       .getUserMedia({
-        video: { width: 250, height: 170, facingMode: 'user', aspectRatio: .5 }
+        video: { width: 230, height: 180, facingMode: 'user', aspectRatio: .5 }
       })
       .then(stream => {
         this.videoElement.srcObject = stream;
@@ -1264,7 +1264,7 @@ export class GenderComponent {
         <div style="width:200px;">       
         <fa-icon [icon]="['fas', 'kiss-wink-heart']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
           <mat-checkbox formControlName="Relation" labelPosition="after" fxFlex="grow" fxFlexAlign="center">
-          I have a Partner
+        
           </mat-checkbox>
         </div>
         <div style="width:200px;">
@@ -1274,7 +1274,7 @@ export class GenderComponent {
           </mat-checkbox>
           <mat-slider fxFlexAlign="center"
           [disabled]= "!myForm.get('kidsEnable').value"
-          max= 10
+          max= 6
           min= 0
           step= 1
           thumbLabel= true
@@ -1297,7 +1297,7 @@ export class GenderComponent {
 })
 export class RelationshipComponent implements OnInit {
   myForm: FormGroup;
-  settingMsg= 'Your Relationship Status';
+  settingMsg= 'Relationship Status';
   disabledslider: true;
   disableback: false;
   matcher = new MyErrorStateMatcher();
