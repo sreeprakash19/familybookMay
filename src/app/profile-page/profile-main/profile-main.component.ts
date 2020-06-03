@@ -292,7 +292,7 @@ export class DetailsComponent  implements OnInit  {
 @Component({
   selector: 'dialog-audio',
   template:`
-  <mat-card fxFlex ngStyle.lt-sm="background:gold; height: 40vh; width: 65vw;" ngStyle.gt-xs="background:gold; height: 40vh; width: 30vw;" fxLayout="column" fxLayoutAlign="space-around center">
+  <mat-card fxFlex ngStyle.lt-sm="background:gold; height: 52vh; width: 72vw;" ngStyle.gt-xs="background:gold; height: 40vh; width: 30vw;" fxLayout="column" fxLayoutAlign="space-around center">
     <mat-card-title>{{settingMsg}}</mat-card-title>  
     <audio *ngFor="let audio of audioFiles" ngStyle.lt-sm="width: 50vw" controls='true' [src]="audio" (error) = "connectionerror()">
     </audio>
@@ -657,14 +657,14 @@ export class AudioComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'dialog-picture',
   template:`
-    <mat-card ngStyle.lt-sm="background:gold; height: 60vh; width: 65vw;" ngStyle.gt-xs="background:gold;  height: 50vh; width: 25vw;" fxFlex  fxLayout="column" fxLayoutAlign="center center">
+    <mat-card ngStyle.lt-sm="background:gold; height: 55vh; width: 7vw;" ngStyle.gt-xs="background:gold;  height: 50vh; width: 25vw;" fxFlex  fxLayout="column" fxLayoutAlign="center center">
     
     <mat-card-title >{{settingMsg}}</mat-card-title>  
 
     <mat-card-content fxFlex fxLyout="column" fxLayoutAlign="center center">
       <img mat-card-lg-image [fxShow]= "showimage ? true :  false" src= "{{imagesrc}}" (load)="AfterVideoLoad()">
       <video #video autoplay playsinline  [fxShow]= "showcamera ? true :  false" (durationchange)="AfterVideoLoad()"></video>
-      <canvas [fxShow]="showcanvas ? true : false" #canvas id="canvas" width="250px" height="200px"></canvas>
+      <canvas [fxShow]="showcanvas ? true : false" #canvas id="canvas" width="250px" height="180px"></canvas>
       <mat-spinner [fxShow]= "showspinner ? true :  false" [diameter]="30"></mat-spinner>
     </mat-card-content>
     <mat-card-actions>
@@ -792,7 +792,7 @@ export class PicturesComponent
     this.videoElement = this.video.nativeElement;
     navigator.mediaDevices
       .getUserMedia({
-        video: { width: 250, height: 200, facingMode: 'user', aspectRatio: .5 }
+        video: { width: 250, height: 170, facingMode: 'user', aspectRatio: .5 }
       })
       .then(stream => {
         this.videoElement.srcObject = stream;
@@ -954,7 +954,7 @@ export class PicturesComponent
         this.context = this.canvasElement.getContext('2d');
         this.AudioOption = 'Save';
         this.videostreamRef.getTracks().map((val) => {
-          this.context.drawImage(this.videoElement, 0, 0, 20, 200);
+          this.context.drawImage(this.videoElement, 0, 0, 250, 170);
           this.videostreamOn = false;
           val.stop();
         });
