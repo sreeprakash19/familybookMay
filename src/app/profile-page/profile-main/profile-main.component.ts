@@ -4,35 +4,20 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { DomSanitizer } from '@angular/platform-browser';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
-
-import {Directive} from '@angular/core';
-import {MAT_CHECKBOX_CLICK_ACTION} from '@angular/material/checkbox';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {ThemePalette} from '@angular/material/core';
-
-import {
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {  ChangeDetectionStrategy } from '@angular/core';
 import {MatCalendar} from '@angular/material/datepicker';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import moment from 'moment'
-// tslint:disable-next-line:no-duplicate-imports
-//import {default as _rollupMoment, Moment} from 'moment';
-
-//const moment = _rollupMoment || _moment;
-
 import {FormBuilder , FormGroup, FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
-
 import { SearchCountryField, TooltipLabel, CountryISO } from 'ngx-intl-tel-input';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
-    //console.log('called', !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)));
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
@@ -86,7 +71,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
   impdatesdialogRef: any;
   genderdialogRef: any;
   relationdialogRef: any;
-  kidsdialogRef: any;
+  contactdialogRef: any;
   profileForm = this.formBuilder.group({
     DisplayName: [null, [Validators.required]],
     MyPhoneNum: this.formBuilder.group({
@@ -153,12 +138,12 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
     });
   }
   openDialogContact()  {
-    this.kidsdialogRef = this.dialog.open(DetailsComponent, {
+    this.contactdialogRef = this.dialog.open(DetailsComponent, {
       data: this.mylocaluser,
       backdropClass: 'backdropBackground'
     });
 
-    this.kidsdialogRef.afterClosed().subscribe(result => {
+    this.contactdialogRef.afterClosed().subscribe(result => {
       if(result !== null && result !== undefined ){
         const myobj= result.MyPhonenum as FormGroup;
         this.profileForm.patchValue(
@@ -186,11 +171,6 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
   dosomething() {
     this.showspinner = false;
   }
-}
-
-/** Data structure for holding telephone number. */
-export class MyTel {
-  constructor(public area: string, public exchange: string, public subscriber: string) {}
 }
 
 @Component({
@@ -310,198 +290,6 @@ export class DetailsComponent  implements OnInit  {
 }
 
 @Component({
-  selector: 'example-tel-input',
-  template:
-  `
-  <div [formGroup]="parts" class="example-tel-input-container">
-  <input class="example-tel-input-element" formControlName="countrycode" size="3" aria-label="Country code" (input)="_handleInput()">
-  <span class="example-tel-input-spacer">&ndash;</span>
-  <input class="example-tel-input-element" formControlName="area" size="3" aria-label="Area code" (input)="_handleInput()">
-  <span class="example-tel-input-spacer">&ndash;</span>
-  <input class="example-tel-input-element" formControlName="exchange" size="3" aria-label="Exchange code" (input)="_handleInput()">
-  <span class="example-tel-input-spacer">&ndash;</span>
-  <input class="example-tel-input-element" formControlName="subscriber" size="4" aria-label="Subscriber number" (input)="_handleInput()">
-</div>
-
-  `,
-  styles: [`
-  .intl-tel-input {
-    display: block !important;
-  }
-  
-  .intl-tel-input .country-list {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    box-shadow: none;
-    border-color: #c7cace;
-    font-size: 14px;
-    margin-left: 0;
-    margin-top: -1px;
-    width: 165px;
-  }
-  
-  .flag-container.open + input {
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-  }
-
-  .example-tel-input-container {
-    display: flex;
-    width : 100px;
-  }
-  
-  .example-tel-input-element {
-    border: none;
-    background: none;
-    padding: 0;
-    outline: none;
-    font: inherit;
-    text-align: center;
-  }
-  
-  .example-tel-input-spacer {
-    opacity: 0;
-    transition: opacity 200ms;
-  }
-  
-  :host.example-floating .example-tel-input-spacer {
-    opacity: 1;
-  }
-  `],
-  providers: [{provide: MatFormFieldControl, useExisting: MyTelInput}],
-  host: {
-    '[class.example-floating]': 'shouldLabelFloat',
-    '[id]': 'id',
-    '[attr.aria-describedby]': 'describedBy',
-  }
-})
-export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
-  static nextId = 0;
-
-  parts: FormGroup;
-  stateChanges = new Subject<void>();
-  focused = false;
-  errorState = false;
-  controlType = 'example-tel-input';
-  id = `example-tel-input-${MyTelInput.nextId++}`;
-  describedBy = '';
-  onChange = (_: any) => {};
-  onTouched = () => {};
-
-  get empty() {
-    const {value: {area, exchange, subscriber}} = this.parts;
-
-    return !area && !exchange && !subscriber;
-  }
-
-  get shouldLabelFloat() { return this.focused || !this.empty; }
-
-  @Input()
-  get placeholder(): string { return this._placeholder; }
-  set placeholder(value: string) {
-    this._placeholder = value;
-    this.stateChanges.next();
-  }
-  private _placeholder: string;
-
-  @Input()
-  get required(): boolean { return this._required; }
-  set required(value: boolean) {
-    this._required = coerceBooleanProperty(value);
-    this.stateChanges.next();
-  }
-  private _required = false;
-
-  @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-    this._disabled ? this.parts.disable() : this.parts.enable();
-    this.stateChanges.next();
-  }
-  private _disabled = false;
-
-  @Input()
-  get value(): MyTel | null {
-    if (this.parts.valid) {
-      const {value: {area, exchange, subscriber}} = this.parts;
-      return new MyTel(area, exchange, subscriber);
-    }
-    return null;
-  }
-  set value(tel: MyTel | null) {
-    const {area, exchange, subscriber} = tel || new MyTel('', '', '');
-    this.parts.setValue({area, exchange, subscriber});
-    this.stateChanges.next();
-  }
-
-  constructor(
-    formBuilder: FormBuilder,
-    private _focusMonitor: FocusMonitor,
-    private _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Self() public ngControl: NgControl) {
-
-    this.parts = formBuilder.group({
-      countrycode: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-      area: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-      exchange: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-      subscriber: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]],
-    });
-
-    _focusMonitor.monitor(_elementRef, true).subscribe(origin => {
-      if (this.focused && !origin) {
-        this.onTouched();
-      }
-      this.focused = !!origin;
-      this.stateChanges.next();
-    });
-
-    if (this.ngControl != null) {
-      this.ngControl.valueAccessor = this;
-    }
-  }
-
-  ngOnDestroy() {
-    this.stateChanges.complete();
-    this._focusMonitor.stopMonitoring(this._elementRef);
-  }
-
-  setDescribedByIds(ids: string[]) {
-    this.describedBy = ids.join(' ');
-  }
-
-  onContainerClick(event: MouseEvent) {
-    if ((event.target as Element).tagName.toLowerCase() != 'input') {
-      this._elementRef.nativeElement.querySelector('input')!.focus();
-    }
-  }
-
-  writeValue(tel: MyTel | null): void {
-    this.value = tel;
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  _handleInput(): void {
-    this.onChange(this.value);
-  }
-
-  static ngAcceptInputType_disabled: boolean | string | null | undefined;
-  static ngAcceptInputType_required: boolean | string | null | undefined;
-}
-
-
-@Component({
   selector: 'dialog-audio',
   template:`
   <mat-card fxFlex ngStyle.lt-sm="background:gold; height: 40vh; width: 65vw;" ngStyle.gt-xs="background:gold; height: 40vh; width: 30vw;" fxLayout="column" fxLayoutAlign="space-around center">
@@ -549,18 +337,25 @@ export class AudioComponent implements OnInit, OnDestroy {
         //console.log('hi',data.downloadaudioURL);
         this.playgreeting();
       } else {
+        const mediaConstraints = {
+          video: false,
+          audio: true
+        };
+        navigator.mediaDevices
+          .getUserMedia(mediaConstraints)
+          .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
         this.recordgreeting();
       } 
     }
     ngOnInit(){
 
-      const mediaConstraints = {
+      /*const mediaConstraints = {
         video: false,
         audio: true
       };
       navigator.mediaDevices
         .getUserMedia(mediaConstraints)
-        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
+        .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));*/
     }
     ngOnDestroy(){
       if(this.chunks !== null){
@@ -697,6 +492,7 @@ export class AudioComponent implements OnInit, OnDestroy {
       alert('Uh-oh, Connection Issue, Check Internet connection2');
     }    
     startRecording() {
+
       if (this.state === RecordingState.STOPPED) {//start recording
         this.mediaRecorder.start();
         this.disableback = true;
@@ -782,6 +578,13 @@ export class AudioComponent implements OnInit, OnDestroy {
             case true:
               this.data.downloadaudioURL = '';
               this.audioFiles.pop();
+              const mediaConstraints = {
+                video: false,
+                audio: true
+              };
+              navigator.mediaDevices
+                .getUserMedia(mediaConstraints)
+                .then(this.mediaavialable.bind(this), this.mediaerror.bind(this));
               this.recordgreeting();
               break;
             case false:
@@ -850,7 +653,7 @@ export class AudioComponent implements OnInit, OnDestroy {
       }
     }
 }
-/*pictures*/
+
 @Component({
   selector: 'dialog-picture',
   template:`
@@ -1233,6 +1036,8 @@ export class PicturesComponent
     clearInterval(this.intervalId);
   }
 }
+
+/** Start datepicker. */
 @Component({
   selector: 'app-datepicker-custom-header-example',
   template: `
@@ -1282,7 +1087,7 @@ export class PicturesComponent
 export class DatepickerComponent {
 
   settingMsg= 'Edit Dates';
-  exampleHeader = ExampleHeader;
+  exampleHeader = ExampleHeaderComponent;
   disableback: false;
   birthdate = new FormControl(moment(), [Validators.required]);
   Annidate = new FormControl(moment(), [Validators.required]);
@@ -1300,8 +1105,6 @@ export class DatepickerComponent {
 
 
 }
-
-/** Custom header component for datepicker. */
 @Component({
   selector: 'app-example-header',
   styles: [`
@@ -1335,7 +1138,7 @@ export class DatepickerComponent {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleHeader<D> implements OnDestroy {
+export class ExampleHeaderComponent<D> implements OnDestroy {
   private _destroyed = new Subject<void>();
 
   constructor(
@@ -1366,6 +1169,7 @@ export class ExampleHeader<D> implements OnDestroy {
   }
 }
 //https://stackblitz.com/angular/jamxebpdmdea?file=src%2Fapp%2Finput-error-state-matcher-example.ts
+/** End datepicker. */
 
 @Component({
   selector: 'app-header-gender',
