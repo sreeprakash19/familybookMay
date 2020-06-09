@@ -204,7 +204,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
       [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
       [selectFirstCountry]="false" 
       [selectedCountryISO]="CountryISO.India"
-      [maxLength]="15" 
+      [maxLength]="10" 
       [tooltipField]="TooltipLabel.Name" 
       [phoneValidation]="true" 
       [separateDialCode]="separateDialCode"
