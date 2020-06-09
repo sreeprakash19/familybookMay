@@ -204,7 +204,7 @@ export class ProfileMainComponent implements OnInit , OnDestroy {
       [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
       [selectFirstCountry]="false" 
       [selectedCountryISO]="CountryISO.India"
-      [maxLength]="15" 
+      [maxLength]="10" 
       [tooltipField]="TooltipLabel.Name" 
       [phoneValidation]="true" 
       [separateDialCode]="separateDialCode"
@@ -1264,7 +1264,7 @@ export class GenderComponent {
         <div style="width:200px;">       
         <fa-icon [icon]="['fas', 'kiss-wink-heart']" [styles]="{'stroke': 'red', 'color': 'red'}" size="3x"></fa-icon>
           <mat-checkbox formControlName="Relation" labelPosition="after" fxFlex="grow" fxFlexAlign="center">
-          I have a Partner
+        I have a partner to partner
           </mat-checkbox>
         </div>
         <div style="width:200px;">
@@ -1274,7 +1274,7 @@ export class GenderComponent {
           </mat-checkbox>
           <mat-slider fxFlexAlign="center"
           [disabled]= "!myForm.get('kidsEnable').value"
-          max= 10
+          max= 6
           min= 0
           step= 1
           thumbLabel= true
@@ -1297,7 +1297,7 @@ export class GenderComponent {
 })
 export class RelationshipComponent implements OnInit {
   myForm: FormGroup;
-  settingMsg= 'Your Relationship Status';
+  settingMsg= 'Relationship Status';
   disabledslider: true;
   disableback: false;
   matcher = new MyErrorStateMatcher();
@@ -1341,5 +1341,3 @@ export class RelationshipComponent implements OnInit {
 
 
 }
-
-
